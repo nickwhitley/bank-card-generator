@@ -1,20 +1,17 @@
 package com.Nick;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
-    private static ArrayList<String> storedCardNumbers = new ArrayList<String>();
+//    private static ArrayList<String> storedCardNumbers = new ArrayList<String>();
     private static File myFile = new File("bankCardNumbers.txt");
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         menu();
-
 
     }
 
@@ -35,14 +32,11 @@ public class Main {
             createNewCard();
         } else if (choice == 2) {
             System.out.println("-------------------------");
-            System.out.println("There are " + storedCardNumbers.size() + " cards in the system");
-            for (int i = 0; i < storedCardNumbers.size(); i++) {
-                System.out.println(storedCardNumbers.get(i).toString());
-            }
+            printFile();
             System.out.println("-------------------------");
         } else if (choice == 3) {
             System.out.println("Thank you for coming in!");
-            writeFile();
+//            writeFile();
             exit = true;
         } else {
             System.out.println("Incorrect choice.\n" +
@@ -58,6 +52,43 @@ public class Main {
         }
     }
 
+    //allows the file to print for user
+    public static void printFile() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(myFile));
+            double counter = 0;
+            String entry;
+
+
+            System.out.println(countEntriesInFile());
+            while ((entry = reader.readLine()) != null) {
+                System.out.println(entry);
+            }
+        } catch (Exception e) {
+            System.out.println("Could not retrieve File ");
+        }
+    }
+
+    //counts the card on the file to notify user of how many entries there are.
+    public static String countEntriesInFile() {
+
+        int counter = 0;
+        String entry;
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(myFile));
+
+            while ((entry = reader.readLine()) != null) {
+                counter++;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "There are " + counter + " cards in the system:";
+
+    }
+
 
     //create new bank card with user params
     public static String createNewCard() {
@@ -67,7 +98,7 @@ public class Main {
         System.out.println("New card successfully created.\n" +
                 "Your new bank card number is: \n" +
                 cardNumber);
-        storedCardNumbers.add(cardNumber);
+        writeFile(cardNumber);
         return cardNumber;
     }
 
@@ -203,12 +234,14 @@ public class Main {
         }
     }
 
-    public static void writeFile() {
+    public static void writeFile(String cardNumber) {
         try {
-            FileWriter myWriter = new FileWriter(myFile.getName());
-            for(String str: storedCardNumbers) {
-                myWriter.write(str + System.lineSeparator());
-            }
+            FileWriter myWriter = new FileWriter(myFile.getName(), true);
+//            for(String str: storedCardNumbers) {
+//                myWriter.write(str + System.lineSeparator());
+//            }
+            String formattedCardNumber = cardNumber + System.lineSeparator();
+            myWriter.write(formattedCardNumber);
             myWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
