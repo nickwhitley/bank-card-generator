@@ -3,13 +3,16 @@ package com.Nick;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
 
 //    private static ArrayList<String> storedCardNumbers = new ArrayList<String>();
     private static File myFile = new File("bankCardNumbers.txt");
+    static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+
 
         menu();
 
@@ -25,7 +28,7 @@ public class Main {
                 "1. Create new bank card.\n" +
                 "2. Check existing cards.\n" +
                 "3. Exit.");
-        Scanner scanner = new Scanner(System.in);
+
         int choice = scanner.nextInt();
 
         if (choice == 1) {
@@ -44,13 +47,11 @@ public class Main {
             menu();
         }
 
-        if (exit == false) {
+        if (!exit) {
             System.out.println("Would you like to do anything else?");
             menu();
-        } else {
-
         }
-    }
+   }
 
     //allows the file to print for user
     public static void printFile() {
@@ -112,19 +113,19 @@ public class Main {
                 "3. Hawaii\n" +
                 "4. Alaska\n" +
                 "5. Other.");
-        Scanner scanner = new Scanner(System.in);
+
         int choice = scanner.nextInt();
 
         if (choice == 1) {
-            location.equalsIgnoreCase("useast");
+            location = "useast";
         } else if (choice == 2) {
-            location.equalsIgnoreCase("uswest");
+            location ="uswest";
         } else if (choice == 3) {
-            location.equalsIgnoreCase("alaska");
+            location ="alaska";
         } else if (choice == 4) {
-            location.equalsIgnoreCase("hawaii");
+            location ="hawaii";
         } else if (choice == 5) {
-            location.equalsIgnoreCase("other");
+            location ="other";
         } else {
             System.out.println("Entered invalid selection.\n" +
                     "Please enter valid selection.");
@@ -145,17 +146,17 @@ public class Main {
                 "3. Credit.\n" +
                 "4. Other.\n" +
                 "Enter corresponding digit: ");
-        Scanner scanner = new Scanner(System.in);
+
         int choice = scanner.nextInt();
 
         if (choice == 1) {
-            accountType.equalsIgnoreCase("checking");
+            accountType = "checking";
         } else if (choice == 2) {
-            accountType.equalsIgnoreCase("savings");
+            accountType = "savings";
         } else if (choice == 3) {
-            accountType.equalsIgnoreCase("credit");
+            accountType = "credit";
         } else if (choice == 4) {
-            accountType.equalsIgnoreCase("other");
+            accountType = "other";
         } else {
             System.out.println("Entered invalid selection.\n" +
                     "Please enter valid selection.");
@@ -167,7 +168,7 @@ public class Main {
 
     //create random number for card
     public static int getRandom(int min, int max) {
-        return (int) (Math.random() * (max - min)) + min;
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 
     public static String getCardNumber(String accountType, String location) {
@@ -181,11 +182,11 @@ public class Main {
         int lastEightSecond;
 
         //assign a value to each account type
-        if (accountType.equalsIgnoreCase("checking")) {
+        if (accountType == "checking") {
             accountKeySet = 4400;
-        } else if (accountType.equalsIgnoreCase("savings")) {
+        } else if (accountType == "savings") {
             accountKeySet = 4300;
-        } else if (accountType.equalsIgnoreCase("credit")) {
+        } else if (accountType == "credit") {
             accountKeySet = 4200;
         } else {
             accountKeySet = 4000;
@@ -193,13 +194,13 @@ public class Main {
 
 
         //Assign a value to each location of client
-        if (location.equalsIgnoreCase("useast")) {
+        if (location == "useast") {
             locationKeySet = 1011;
-        } else if (location.equalsIgnoreCase("uswest")) {
+        } else if (location == "uswest") {
             locationKeySet = 2011;
-        } else if (location.equalsIgnoreCase("Alaska")) {
+        } else if (location == "Alaska") {
             locationKeySet = 3011;
-        } else if (location.equalsIgnoreCase("hawaii")) {
+        } else if (location == "hawaii") {
             locationKeySet = 4011;
         } else {
             locationKeySet = 1022;
@@ -223,6 +224,7 @@ public class Main {
 
     public void createFile() {
         try {
+
             if (myFile.createNewFile()) {
                 System.out.println("File created: " + myFile.getName());
             } else {
@@ -236,6 +238,7 @@ public class Main {
 
     public static void writeFile(String cardNumber) {
         try {
+
             FileWriter myWriter = new FileWriter(myFile.getName(), true);
 //            for(String str: storedCardNumbers) {
 //                myWriter.write(str + System.lineSeparator());
@@ -243,6 +246,7 @@ public class Main {
             String formattedCardNumber = cardNumber + System.lineSeparator();
             myWriter.write(formattedCardNumber);
             myWriter.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
